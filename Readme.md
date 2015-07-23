@@ -171,9 +171,7 @@ describe('request.agent(app)', function(){
 
 ### .expect(function(res) {})
 
-  Pass a custom assertion function. It'll be given the response object to check. If the response is ok, it should return falsy, most commonly by not returning anything. If the check fails, throw an error or return a truthy value like a string that'll be turned into an error.
-
-  Here the string or error throwing options are both demonstrated:
+  Pass a custom assertion function. It'll be given the response object to check. If the check fails, throw an Error.
 
   ```js
   request(app)
@@ -182,10 +180,12 @@ describe('request.agent(app)', function(){
     .end(done);
 
   function hasPreviousAndNextKeys(res) {
-    if (!('next' in res.body)) return "missing next key";
+    if (!('next' in res.body)) return new Error("missing next key");
     if (!('prev' in res.body)) throw new Error("missing prev key");
   }
   ```
+
+Note: this is different from <1.0.0 where `return "x"` was treated like `return new Error("x")`.
 
 ### .end(fn)
 
